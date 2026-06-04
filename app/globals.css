@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+@layer base {
+  * {
+    border-color: inherit;
+  }
+
+  body {
+    background-color: #0d0d1a;
+    color: rgb(249 250 251);
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
