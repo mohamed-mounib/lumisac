@@ -51,17 +51,34 @@ export default function CollectionGrid() {
     },
   ];
 
+  const updateProducts = (updated: string[]) => {
+    setSelectedProducts(updated);
+    // sessionStorage يعمل على كل متصفح بما فيهم Telegram browser و Safari iOS
+    try {
+      sessionStorage.setItem('lumisac_selected', JSON.stringify(updated));
+    } catch {}
+    // CustomEvent كـ fallback للمتصفحات الحديثة
+    try {
+      window.dispatchEvent(new CustomEvent('selectProduct', { detail: updated }));
+    } catch {}
+    // storageEvent كـ fallback ثاني
+    try {
+      window.dispatchEvent(new Event('lumisacProductUpdate'));
+    } catch {}
+  };
+
   const handleOrderClick = (productName: string) => {
     const updated = selectedProducts.includes(productName)
       ? selectedProducts.filter((p) => p !== productName)
       : [...selectedProducts, productName];
 
-    setSelectedProducts(updated);
-    window.dispatchEvent(new CustomEvent('selectProduct', { detail: updated }));
+    updateProducts(updated);
 
     if (!selectedProducts.includes(productName)) {
-      const orderSection = document.getElementById('order');
-      if (orderSection) orderSection.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        const orderSection = document.getElementById('order');
+        if (orderSection) orderSection.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     }
   };
 
